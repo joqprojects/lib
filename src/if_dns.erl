@@ -29,22 +29,22 @@
 %% Server functions
 %% ====================================================================
 
-call(ServiceId,Vsn,{M,F,A},{DnsIp,DnsPort})->    
+call(ServiceId,{M,F,A},{DnsIp,DnsPort})->    
  % io:format(" ~p~n",[{?MODULE,?LINE,ServiceId,M,F,A}]),
-    call(ServiceId,Vsn,{M,F,A},{DnsIp,DnsPort},?TIMEOUT_TCPCLIENT).
+    call(ServiceId,{M,F,A},{DnsIp,DnsPort},?TIMEOUT_TCPCLIENT).
 
-call(ServiceId,Vsn,{M,F,A},{DnsIp,DnsPort},TimeOut)->
+call(ServiceId,{M,F,A},{DnsIp,DnsPort},TimeOut)->
     Result=case ServiceId of
 	       "dns"->
 		   tcp:test_call([{DnsIp,DnsPort}],{M,F,A},TimeOut);
 	       _->
-		   case tcp:test_call([{DnsIp,DnsPort}],{dns,get_instances,[ServiceId,Vsn]}) of
+		   case tcp:test_call([{DnsIp,DnsPort}],{dns,get_instances,[ServiceId]}) of
 		       {error,Err}->
 			   io:format("Error ~p~n",[{?MODULE,?LINE,Err}]),
 			   {error,[?MODULE,?LINE,Err]};
 		       []->
 			   %io:format("Error ~p~n",[{?MODULE,?LINE,'no availible nodes ',ServiceId,Vsn}]),
-			   {error,[?MODULE,?LINE,'no availible nodes ',ServiceId,Vsn]};
+			   {error,[?MODULE,?LINE,'no availible nodes ',ServiceId]};
 		       {badrpc,Err}->
 			   io:format("Error ~p~n",[{?MODULE,?LINE,Err}]),
 			   {error,[?MODULE,?LINE,Err]};
@@ -61,17 +61,17 @@ call(ServiceId,Vsn,{M,F,A},{DnsIp,DnsPort},TimeOut)->
 %% Description: fun x skeleton 
 %% Returns:ok|error
 %% ------------------------------------------------------------------
-cast(ServiceId,Vsn,{M,F,A},{DnsIp,DnsPort})->
+cast(ServiceId ,{M,F,A},{DnsIp,DnsPort})->
     Result=case ServiceId of
 	"dns"->
 		   tcp:test_cast([{DnsIp,DnsPort}],{M,F,A});
 	       _->
-		   case tcp:test_call([{DnsIp,DnsPort}],{dns,get_instances,[ServiceId,Vsn]}) of
+		   case tcp:test_call([{DnsIp,DnsPort}],{dns,get_instances,[ServiceId ]}) of
 		       {error,Err}->
 			   {error,[?MODULE,?LINE,Err]};
 		       []->
-			   io:format("Error ~p~n",[{?MODULE,?LINE,'no availible nodes ',ServiceId,Vsn}]),
-			   {error,[?MODULE,?LINE,'no availible nodes ',ServiceId,Vsn]};
+			   io:format("Error ~p~n",[{?MODULE,?LINE,'no availible nodes ',ServiceId }]),
+			   {error,[?MODULE,?LINE,'no availible nodes ',ServiceId]};
 		       {badrpc,Err}->
 			   io:format("Error ~p~n",[{?MODULE,?LINE,Err}]),
 			  {error,[?MODULE,?LINE,Err]};
