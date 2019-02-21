@@ -98,7 +98,7 @@ init([]) ->
 handle_call({heart_beat}, _From, State) ->
     DnsInfo=State#state.dns_info,
     {dns,DnsIp,DnsPort}=State#state.dns_addr,
-    if_dns:cast("dns",latest,{dns,dns_register,[DnsInfo]},{DnsIp,DnsPort}),
+    if_dns:cast("dns",{dns,dns_register,[DnsInfo]},{DnsIp,DnsPort}),
     {reply,ok, State};
     
 handle_call({stop}, _From, State) ->

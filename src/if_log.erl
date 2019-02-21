@@ -36,6 +36,11 @@
 %% Description:
 %% Returns: non
 %% --------------------------------------------------------------------
+log(Type,Severity,MsgStr)->
+    Msg=rpc:call(node(),if_log,init_log,[Type,Severity,MsgStr]),
+    if_dns:cast("applog",{applog,log,[Msg]}).
+
+
 init(Type,Severity,MsgStr)->
     rpc:call(node(),if_log,init_log,[Type,Severity,MsgStr]).
 

@@ -28,10 +28,39 @@
 %% ====================================================================
 %% Server functions
 %% ====================================================================
+%% --------------------------------------------------------------------
+%% Function: fun/x
+%% Description: fun x skeleton 
+%% Returns:ok|error
+%% --------------------------------------------------------------------
+reg_info()->
+    {ok,IpAddr}=application:get_env(ip_addr),
+    {ok,Port}=application:get_env(port),
+    {ok,ServiceId}=application:get_env(service_id),
+    {ServiceId,IpAddr,Port}.
+    
+
+
+
+
+%% --------------------------------------------------------------------
+%% Function: fun/x
+%% Description: fun x skeleton 
+%% Returns:ok|error
+%% --------------------------------------------------------------------
+call(ServiceId,{M,F,A})-> 
+    {ok,DnsIp}=application:get_env(dns_ip_addr),
+    {ok,DnsPort}=application:get_env(dns_port),
+    call(ServiceId,{M,F,A},{DnsIp,DnsPort}).
 
 call(ServiceId,{M,F,A},{DnsIp,DnsPort})->    
  % io:format(" ~p~n",[{?MODULE,?LINE,ServiceId,M,F,A}]),
-    call(ServiceId,{M,F,A},{DnsIp,DnsPort},?TIMEOUT_TCPCLIENT).
+    call(ServiceId,{M,F,A},{DnsIp,DnsPort},?TIMEOUT_TCPCLIENT);
+
+call(ServiceId ,{M,F,A},TimeOut)->
+    {ok,DnsIp}=application:get_env(dns_ip_addr),
+    {ok,DnsPort}=application:get_env(dns_port),
+    call(ServiceId,{M,F,A},{DnsIp,DnsPort},TimeOut).
 
 call(ServiceId,{M,F,A},{DnsIp,DnsPort},TimeOut)->
     Result=case ServiceId of
@@ -61,6 +90,11 @@ call(ServiceId,{M,F,A},{DnsIp,DnsPort},TimeOut)->
 %% Description: fun x skeleton 
 %% Returns:ok|error
 %% ------------------------------------------------------------------
+cast(ServiceId,{M,F,A})-> 
+    {ok,DnsIp}=application:get_env(dns_ip_addr),
+    {ok,DnsPort}=application:get_env(dns_port),
+    cast(ServiceId ,{M,F,A},{DnsIp,DnsPort}).
+
 cast(ServiceId ,{M,F,A},{DnsIp,DnsPort})->
     Result=case ServiceId of
 	"dns"->
