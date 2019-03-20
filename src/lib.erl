@@ -9,6 +9,7 @@
 %% --------------------------------------------------------------------
 %% Include files
 %% --------------------------------------------------------------------
+-include("interface/if_kubelet.hrl").
 
 -include("lib/src/lib_local.hrl").
 
@@ -96,8 +97,7 @@ init([]) ->
 %% --------------------------------------------------------------------
 
 handle_call({heart_beat}, _From, State) ->
-    rpc:cast(node(),kubelet,register,[atom_to_list(?MODULE)]),
-
+    kubelet:send("kubelet",?Register(atom_to_list(?MODULE))),
   %  DnsInfo=State#state.dns_info,
   %  {dns,DnsIp,DnsPort}=State#state.dns_addr,
   %  if_dns:cast("dns",{dns,dns_register,[DnsInfo]},{DnsIp,DnsPort}),
